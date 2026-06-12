@@ -1,190 +1,102 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tecnologia e Meio Ambiente no Campo</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+/**
+ * AgroFuturo - Scripts de Interatividade e Acessibilidade Otimizados
+ */
 
-    <div class="accessibility-bar" role="region" aria-label="Ferramentas de Acessibilidade">
-        <button id="btn-increase-font" title="Aumentar Fonte" aria-label="Aumentar tamanho do texto">A+</button>
-        <button id="btn-decrease-font" title="Diminuir Fonte" aria-label="Diminuir tamanho do texto">A-</button>
-        <button id="btn-toggle-theme" title="Alternar Modo Escuro/Claro" aria-label="Alternar tema visual">🌓</button>
-        <button id="btn-speech" title="Ouvir Texto (Leitura por voz)" aria-label="Iniciar ou parar leitura por voz">🔊</button>
-    </div>
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // --- ACESSIBILIDADE: CONTROLE DE FONTE ---
+    let currentFontSizePercentage = 100;
+    const btnIncreaseFont = document.getElementById('btn-increase-font');
+    const btnDecreaseFont = document.getElementById('btn-decrease-font');
 
-    <header class="main-header">
-        <div class="header-container">
-            <div class="logo">Agro<span>Futuro</span></div>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="#inicio">Início</a></li>
-                    <li><a href="#contexto">Inovação</a></li>
-                    <li><a href="#beneficios">Benefícios</a></li>
-                    <li><a href="#comentarios">Comunidade</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+    btnIncreaseFont.addEventListener('click', () => {
+        if (currentFontSizePercentage < 130) {
+            currentFontSizePercentage += 10;
+            document.documentElement.style.fontSize = `${currentFontSizePercentage}%`;
+        }
+    });
 
-    <main id="main-content">
+    btnDecreaseFont.addEventListener('click', () => {
+        if (currentFontSizePercentage > 90) {
+            currentFontSizePercentage -= 10;
+            document.documentElement.style.fontSize = `${currentFontSizePercentage}%`;
+        }
+    });
+
+    // --- ACESSIBILIDADE: INTERMUTABILIDADE DE TEMA ---
+    const btnToggleTheme = document.getElementById('btn-toggle-theme');
+    
+    btnToggleTheme.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+    });
+
+    // --- ACESSIBILIDADE: LEITURA POR VOZ ---
+    const btnSpeech = document.getElementById('btn-speech');
+    let isSpeaking = false;
+    let speechUtterance = null;
+
+    btnSpeech.addEventListener('click', () => {
+        if (isSpeaking) {
+            window.speechSynthesis.cancel();
+            isSpeaking = false;
+            btnSpeech.textContent = '🔊';
+        } else {
+            const mainContent = document.getElementById('main-content');
+            if (!mainContent) return;
+
+            speechUtterance = new SpeechSynthesisUtterance(mainContent.innerText);
+            speechUtterance.lang = 'pt-BR';
+
+            speechUtterance.onend = () => {
+                isSpeaking = false;
+                btnSpeech.textContent = '🔊';
+            };
+
+            window.speechSynthesis.speak(speechUtterance);
+            isSpeaking = true;
+            btnSpeech.textContent = '🛑';
+        }
+    });
+
+    // --- FORMULÁRIO DE FEEDBACK DA COMUNIDADE ---
+    const commentForm = document.getElementById('comment-form');
+    const txtComment = document.getElementById('txt-comment');
+    const commentsList = document.getElementById('comments-list');
+
+    commentForm.addEventListener('submit', (e) => {
+        e.preventDefault();
         
-        <section id="inicio" class="hero-section">
-            <div class="hero-overlay"></div>
-            <div class="hero-content">
-                <span class="hero-badge">Inovação Sustentável & IA</span>
-                <h1>Tecnologia e Meio Ambiente reforçam a qualidade de vida no campo</h1>
-                <p>A união entre a inteligência digital e a preservação ecológica liderando a nova revolução silenciosa do agronegócio sustentável brasileiro.</p>
-                <a href="#contexto" class="btn-primary">Explore o Futuro</a>
+        const commentValue = txtComment.value.trim();
+        if (commentValue === '') return;
+
+        const newComment = document.createElement('div');
+        newComment.className = 'comment-item';
+        
+        const now = new Date();
+        const timeString = `Hoje às ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+        newComment.innerHTML = `
+            <div class="comment-header">
+                <span style="font-weight:600; color:#10b981;">Produtor Conectado</span>
+                <span>${timeString}</span>
             </div>
-        </section>
+            <p class="comment-body">${escapeHTML(commentValue)}</p>
+        `;
 
-        <section id="contexto" class="context-section">
-            <div class="container grid-2">
-                <div class="text-block">
-                    <h2>O Protagonismo Verde e Tecnológico</h2>
-                    <p>A preservação ambiental e a inovação sustentável ganham cada vez mais espaço no debate global em um momento marcado pelas mudanças climáticas, pressões sobre recursos naturais e necessidade de garantir qualidade de vida no meio rural. Especialistas apontam que esse cenário coloca o Brasil em posição de destaque por unir ciência, tecnologia e práticas agrícolas sustentáveis capazes de equilibrar produção e conservação ambiental.</p>
-                    <p>Ao analisar a evolução da <a href="https://aegro.com.br/blog/tecnologia-no-campo/" target="_blank" rel="noopener noreferrer" class="text-link">tecnologia no campo</a>, percebe-se que ferramentas como sensores de solo e Big Data deixaram de ser distantes e passaram a focar na redução de custos e otimização real da lavoura.</p>
-                </div>
-                <div class="image-wrapper">
-                    <a href="https://aegro.com.br/blog/tecnologia-no-campo/" target="_blank" rel="noopener noreferrer" class="image-container-link" title="Clique para ver o artigo original sobre Tecnologia no Campo na Aegro">
-                        <div class="imagem"> 
-                            <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad49f?auto=format&fit=crop&w=800&q=80" alt="Sensores inteligentes aplicados diretamente no campo monitorando a plantação."> 
-                            <span class="image-source-tag">Fonte: Aegro</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </section>
+        commentsList.insertBefore(newComment, commentsList.firstChild);
+        txtComment.value = '';
+    });
 
-        <section class="strategic-section">
-            <div class="container grid-2 reverse">
-                <div class="text-block">
-                    <h2>Estratégia e Reconhecimento Global</h2>
-                    <p>Pesquisadores e empreendedores rurais brasileiros têm conquistado reconhecimento internacional por desenvolver soluções capazes de melhorar a qualidade de vida no campo. Na prática, sistemas digitais e tecnologias inteligentes auxiliam agricultores e comunidades na gestão de recursos naturais, prevenção da degradação ambiental e promoção de práticas sustentáveis.</p>
-                    <p>Muitas dessas competências são aprimoradas através de capacitação técnica, como as abordadas em diretrizes de um <a href="https://aegro.com.br/blog/curso-de-agricultura-de-precisao/" target="_blank" rel="noopener noreferrer" class="text-link">curso de agricultura de precisão</a>, ensinando a aplicar tecnologias de mapeamento, distribuição correta de corretivos e uso estratégico de insumos por talhão.</p>
-                </div>
-                <div class="image-wrapper">
-                    <a href="https://aegro.com.br/blog/curso-de-agricultura-de-precisao/" target="_blank" rel="noopener noreferrer" class="image-container-link" title="Clique para ver o artigo original sobre Cursos de Agricultura de Precisão na Aegro">
-                        <div class="imagem"> 
-                            <img src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=800&q=80" alt="Mapeamento e monitoramento tecnológico de lavouras em larga escala com ferramentas de precisão."> 
-                            <span class="image-source-tag">Fonte: Aegro</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <section id="beneficios" class="benefits-section">
-            <div class="container">
-                <div class="section-title-wrapper">
-                    <h2>Benefícios da Tecnologia Ambiental e IA para o Campo</h2>
-                    <p>O uso de tecnologias digitais e Inteligência Artificial (IA) no meio rural está transformando práticas agrícolas e ambientais, promovendo eficiência, sustentabilidade e qualidade de vida.</p>
-                </div>
-                
-                <div class="benefits-grid">
-                    <div class="benefit-card">
-                        <div class="card-icon">💧</div>
-                        <h3>1. Otimização de recursos naturais</h3>
-                        <p>Sistemas inteligentes permitem o uso mais eficiente da água, solo e energia através de sensores que monitoram a umidade ideal.</p>
-                    </div>
-
-                    <div class="benefit-card">
-                        <div class="card-icon">📡</div>
-                        <h3>2. Monitoramento ambiental e da produção</h3>
-                        <p>Drones e sensores ambientais permitem mapear áreas agrícolas, identificar degradação do solo e contaminação hídrica rapidamente.</p>
-                    </div>
-
-                    <div class="benefit-card">
-                        <div class="card-icon">🔮</div>
-                        <h3>3. Previsibilidade e gestão de riscos</h3>
-                        <p>A inteligência artificial possibilita analisar dados climáticos e prever secas ou pragas, mitigando prejuízos severos.</p>
-                    </div>
-
-                    <div class="benefit-card">
-                        <div class="card-icon">🤖</div>
-                        <h3>4. Automação sustentável</h3>
-                        <p>Máquinas e equipamentos inteligentes realizam o plantio e manejo com taxa variável de insumos, evitando desperdício de defensivos químicos.</p>
-                    </div>
-
-                    <div class="benefit-card">
-                        <div class="card-icon">🧬</div>
-                        <h3>5. Melhoria da qualidade de vida no campo</h3>
-                        <p>Promove práticas agrícolas mais limpas, rastreabilidade transparente de ponta a ponta e redução de trabalhos manuais exaustivos.</p>
-                    </div>
-
-                    <div class="benefit-card">
-                        <div class="card-icon">🌱</div>
-                        <h3>6. Sustentabilidade permanente</h3>
-                        <p>Assegura que o campo continue produtivo, preservando o ecossistema nativo e os mananciais de água para as próximas gerações.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="quote-section">
-            <div class="container">
-                <div class="quote-container">
-                    <p class="quote-text">"O reconhecimento internacional recebido por pesquisadores e iniciativas brasileiras reforça uma mudança de percepção sobre o país, que passa a ser visto não apenas como exportador de commodities, mas também como protagonista em inovação ambiental aplicada ao campo."</p>
-                    <p class="quote-subtext">Conforme destacado em análises de relevância econômica pela mídia especializada, as <a href="https://forbes.com.br/forbes-agro/2023/09/as-tecnologias-atuais-que-podem-dar-um-salto-de-qualidade-ao-agro/" target="_blank" rel="noopener noreferrer" class="text-link">tecnologias atuais que podem dar um salto de qualidade ao agro</a> englobam a robótica, a internet das coisas (IoT) ajustando parâmetros de saúde vegetal e o acesso descentralizado em nuvem.</p>
-                    
-                    <div class="image-wrapper centered">
-                        <a href="https://forbes.com.br/forbes-agro/2023/09/as-tecnologias-atuais-que-podem-dar-um-salto-de-qualidade-ao-agro/" target="_blank" rel="noopener noreferrer" class="image-container-link" title="Clique para ver a matéria completa na Forbes Agro">
-                            <div class="imagem"> 
-                                <img src="https://images.unsplash.com/photo-1560493676-04071c5f467b?auto=format&fit=crop&w=800&q=80" alt="Produtores monitorando dados de IoT agrícolas de alta tecnologia na nuvem através de um tablet."> 
-                                <span class="image-source-tag">Fonte: Forbes</span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="comentarios" class="comments-section">
-            <div class="container compact">
-                <h2>Interação com o Leitor</h2>
-                <p class="comments-subtitle">Participe do debate: Como você enxerga o papel da Inteligência Artificial no futuro da sustentabilidade rural?</p>
-                
-                <form id="comment-form" class="comment-form">
-                    <div class="form-group">
-                        <label for="txt-comment">Seu comentário</label>
-                        <textarea id="txt-comment" required placeholder="Digite aqui suas reflexões sobre tecnologia e meio ambiente no campo..."></textarea>
-                    </div>
-                    <button type="submit" class="btn-submit">Enviar Comentário</button>
-                </form>
-
-                <div class="comments-display" id="comments-list">
-                    <div class="comment-item">
-                        <div class="comment-header">
-                            <span class="comment-author">Carlos Silva (Agrônomo)</span>
-                            <span class="comment-date">Há 2 horas</span>
-                        </div>
-                        <p class="comment-body">Excelente artigo! A aplicação de sensores de umidade mudou drasticamente o manejo hídrico na nossa região, gerando economia real de água.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <footer class="main-footer">
-        <div class="container footer-content">
-            <div class="footer-brand">
-                <p class="slogan">AgroFuturo ° Conectando a inteligência tecnológica à terra de forma sustentável</p>
-            </div>
-            <div class="footer-references">
-                <h4>Referências Utilizadas</h4>
-                <ul>
-                    <li>Tecnologia no Campo - Aegro: <a href="https://aegro.com.br/blog/tecnologia-no-campo/" target="_blank" rel="noopener noreferrer">aegro.com.br/blog/tecnologia-no-campo/</a></li>
-                    <li>Curso de Agricultura de Precisão - Aegro: <a href="https://aegro.com.br/blog/curso-de-agricultura-de-precisao/" target="_blank" rel="noopener noreferrer">aegro.com.br/blog/curso-de-agricultura-de-precisao/</a></li>
-                    <li>Salto de Qualidade no Agro - Forbes: <a href="https://forbes.com.br/forbes-agro/2023/09/as-tecnologias-atuais-que-podem-dar-um-salto-de-qualidade-ao-agro/" target="_blank" rel="noopener noreferrer">forbes.com.br/.../as-tecnologias-atuais...</a></li>
-                </ul>
-            </div>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
-</body>
-</html>
+    // Tratamento básico Anti-XSS para o formulário
+    function escapeHTML(str) {
+        return str.replace(/[&<>'"]/g, 
+            tag => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;'
+            }[tag] || tag)
+        );
+    }
+});
